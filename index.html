@@ -11,13 +11,13 @@
     <style>
         :root {
             color-scheme: light;
-            --paper: #e9e7dc;
+            --paper: #f6f7f4;
             --ink: #20251f;
-            --muted: #76786f;
+            --muted: #626659;
             --green: #244c3d;
             --green-light: #d4dfd1;
             --red: #a74637;
-            --line: rgba(32, 37, 31, 0.17);
+            --line: rgba(32, 37, 31, 0.12);
             --serif: "Playfair Display", Georgia, serif;
             --sans: "DM Sans", "Segoe UI", sans-serif;
         }
@@ -29,7 +29,7 @@
             position: relative;
             isolation: isolate;
             background-color: var(--paper);
-            background-image: repeating-linear-gradient(135deg, rgba(36, 76, 61, 0.025) 0 1px, transparent 1px 13px), repeating-linear-gradient(45deg, rgba(167, 70, 55, 0.018) 0 1px, transparent 1px 19px);
+            background-image: radial-gradient(ellipse at 100% 0%, rgba(36, 76, 61, 0.06), transparent 45%), radial-gradient(ellipse at 0% 100%, rgba(167, 70, 55, 0.04), transparent 40%);
             color: var(--ink);
             font-family: var(--sans);
             -webkit-font-smoothing: antialiased;
@@ -777,6 +777,31 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         }
+            .theme-option, .theme-wallet, .custom-cover-editor { background: #fff; box-shadow: 0 1px 2px rgba(32, 37, 31, 0.05), 0 8px 22px rgba(32, 37, 31, 0.05); }
+        .auth-field input, .auth-field select { background: #fff; }
+        .empire-panel { padding: 8px 0 56px; }
+        .empire-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 24px; }
+        .stat-box { padding: 16px; border: 1px solid var(--line); border-radius: 4px; background: #fff; box-shadow: 0 1px 2px rgba(32, 37, 31, 0.05); }
+        .stat-box strong { display: block; font: 500 28px var(--serif); color: var(--green); }
+        .stat-box span { font-size: 11px; color: var(--muted); }
+        .empire-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        .empire-card { padding: 20px; border: 1px solid var(--line); border-radius: 4px; background: #fff; box-shadow: 0 8px 22px rgba(32, 37, 31, 0.05); }
+        .empire-card h3 { margin: 0 0 14px; font: 500 22px var(--serif); }
+        .empire-card textarea, .empire-card input { width: 100%; margin: 0 0 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; background: #fff; color: var(--ink); font: 13px var(--sans); }
+        .empire-btn { min-height: 38px; margin: 0 8px 8px 0; padding: 0 16px; border: 0; border-radius: 2px; background: var(--green); color: #fff; font: 600 11px var(--sans); cursor: pointer; }
+        .empire-btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+        .empire-btn:disabled { opacity: 0.4; cursor: default; }
+        .decree-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .decree-item { padding: 12px 14px; border-left: 3px solid var(--red); background: var(--paper); font-size: 13px; line-height: 1.5; }
+        .decree-item small { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; color: var(--muted); font-size: 10px; }
+        .decree-item button { border: 0; background: none; color: var(--red); font-size: 10px; cursor: pointer; }
+        .poll-q { margin: 0 0 12px; font: 500 17px var(--serif); }
+        .poll-opt { position: relative; display: block; width: 100%; margin: 0 0 8px; padding: 10px 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 2px; background: #fff; color: var(--ink); text-align: left; font: 13px var(--sans); cursor: pointer; }
+        .poll-opt i { position: absolute; inset: 0 auto 0 0; background: var(--green-light); z-index: 0; }
+        .poll-opt span { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 8px; }
+        .poll-opt.mine { border-color: var(--green); font-weight: 600; }
+        .empire-status, .empty-note { color: var(--muted); font-size: 12px; }
+        @media (max-width: 760px) { .empire-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .empire-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -796,27 +821,14 @@
             </div>
             <section class="auth-panel" aria-label="Вход и регистрация">
                 <div class="auth-tabs" role="tablist" aria-label="Вход или регистрация">
-                    <button class="auth-tab" id="login-tab" type="button" role="tab" aria-selected="true" aria-controls="login-form">Войти</button>
-                    <button class="auth-tab" id="register-tab" type="button" role="tab" aria-selected="false" aria-controls="register-form">Регистрация</button>
+                    <button class="auth-tab" id="register-tab" type="button" role="tab" aria-selected="true" aria-controls="register-form">Регистрация</button>
                 </div>
-                <form class="auth-form" id="login-form" autocomplete="on" novalidate>
-                    <label class="auth-field">Логин
-                        <input name="username" type="text" minlength="3" maxlength="24" autocomplete="username" required>
-                    </label>
-                    <label class="auth-field">Пароль
-                        <input name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required>
-                    </label>
-                    <button class="auth-submit" type="button">Войти в архив</button>
-                </form>
-                <form class="auth-form" id="register-form" autocomplete="on" novalidate hidden>
+                <form class="auth-form" id="register-form" autocomplete="on" novalidate>
                     <label class="auth-field">Имя
                         <input name="firstName" type="text" minlength="2" maxlength="24" autocomplete="given-name" required>
                     </label>
                     <label class="auth-field">Фамилия
                         <input name="lastName" type="text" minlength="2" maxlength="24" autocomplete="family-name" required>
-                    </label>
-                    <label class="auth-field">Логин
-                        <input name="username" type="text" minlength="3" maxlength="24" autocomplete="username" required>
                     </label>
                     <label class="auth-field">Должность
                         <select name="jobRole">
@@ -824,6 +836,15 @@
                             <option value="Министр">Министр</option>
                             <option value="Вице-президент">Вице-президент</option>
                             <option value="Президент">Президент</option>
+                            <option value="Премьер-министр">Премьер-министр</option>
+                            <option value="Помощник президента">Помощник президента</option>
+                            <option value="Врач">Врач</option>
+                            <option value="Полицейский">Полицейский</option>
+                            <option value="Учитель">Учитель</option>
+                            <option value="Судья">Судья</option>
+                            <option value="Военный">Военный</option>
+                            <option value="Журналист">Журналист</option>
+                            <option value="Учёный">Учёный</option>
                         </select>
                     </label>
                     <label class="auth-field">Дата рождения
@@ -832,16 +853,10 @@
                     <label class="auth-field">Фото для карточки · по желанию
                         <input name="portrait" type="file" accept="image/*">
                     </label>
-                    <label class="auth-field">Пароль · не менее 8 символов
-                        <input name="password" type="password" minlength="8" maxlength="128" autocomplete="new-password" required>
-                    </label>
-                    <label class="auth-field">Повтори пароль
-                        <input name="confirmPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" required>
-                    </label>
                     <button class="auth-submit" type="button">Создать аккаунт</button>
                 </form>
                 <p class="auth-message" id="auth-message" role="status" aria-live="polite"></p>
-                <p class="auth-footnote">Аккаунты хранятся только в этом браузере: пароль превращается в хеш, а твоя карточка появляется в реестре сразу после входа.</p>
+                <p class="auth-footnote">Карточки общие: все, кто открыл эту страницу под своим аккаунтом, видят друг друга в реестре.</p>
             </section>
         </div>
     </section>
@@ -865,6 +880,7 @@
             <div class="view-tabs" id="view-tab-list" role="tablist" aria-label="Разделы архива">
                 <button class="view-tab" id="archive-tab" type="button" role="tab" aria-selected="true" aria-controls="archive-panel" tabindex="0">Архив <span class="view-tab-count">00 записей</span></button>
                 <button class="view-tab" id="shop-tab" type="button" role="tab" aria-selected="false" aria-controls="shop-panel" tabindex="-1">Магазин <span class="view-tab-count" id="shop-tab-balance">160 жт.</span></button>
+                <button class="view-tab" id="empire-tab" type="button" role="tab" aria-selected="false" aria-controls="empire-panel" tabindex="-1">Империя</button>
                 <button class="view-tab" id="admin-tab" type="button" role="tab" aria-selected="false" aria-controls="admin-panel" tabindex="-1" hidden>Админка</button>
             </div>
             <div class="view-panel" id="archive-panel" role="tabpanel" aria-labelledby="archive-tab" tabindex="0">
@@ -1075,6 +1091,32 @@
                     <div class="custom-gallery-grid" id="custom-gallery-grid"></div>
                 </section>
                 <p class="theme-shop-status" id="theme-shop-status" role="status" aria-live="polite">Только игровые жетоны, никаких денежных платежей.</p>
+            </section>
+            <section class="empire-panel view-panel" id="empire-panel" role="tabpanel" aria-labelledby="empire-tab" tabindex="0" hidden>
+                <div class="empire-stats" id="empire-stats"></div>
+                <div class="empire-grid">
+                    <div class="empire-card">
+                        <h3>Указы империи</h3>
+                        <div id="decree-compose" hidden>
+                            <textarea id="decree-text" maxlength="280" rows="3" placeholder="Текст указа (до 280 знаков)"></textarea>
+                            <button class="empire-btn" id="decree-send" type="button">Издать указ</button>
+                        </div>
+                        <ul class="decree-list" id="decree-list"></ul>
+                    </div>
+                    <div class="empire-card">
+                        <h3>Голосование</h3>
+                        <div id="poll-box"></div>
+                        <div id="poll-admin" hidden>
+                            <input id="poll-q" maxlength="90" placeholder="Вопрос">
+                            <input id="poll-a1" maxlength="40" placeholder="Вариант 1">
+                            <input id="poll-a2" maxlength="40" placeholder="Вариант 2">
+                            <input id="poll-a3" maxlength="40" placeholder="Вариант 3 (необязательно)">
+                            <button class="empire-btn" id="poll-create" type="button">Начать голосование</button>
+                            <button class="empire-btn ghost" id="poll-close" type="button">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="empire-status" id="empire-status" role="status" aria-live="polite"></p>
             </section>
             <section class="admin-panel view-panel" id="admin-panel" role="tabpanel" aria-labelledby="admin-tab" tabindex="0" hidden>
                 <div class="admin-heading">
@@ -1629,358 +1671,246 @@
     </script>
     <script>
         (() => {
-            const usersKey = "shki-users-v2";
-            const sessionKey = "shki-session-v2";
-            const $ = (selector) => document.querySelector(selector);
+            const $ = (s) => document.querySelector(s);
             const authScreen = $("#auth-screen"), appShell = $("#app-shell"), topSession = $("#top-session");
             const sessionName = $("#session-name"), message = $("#auth-message"), logoutButton = $("#logout-button");
-            const tabs = { login: [$("#login-tab"), $("#login-form")], register: [$("#register-tab"), $("#register-form")] };
-            const adminSelect = $("#admin-citizen"), adminList = $(".admin-balances");
-            const adminTab = $("#admin-tab"), archiveTab = $("#archive-tab"), staffList = $("#admin-staff"), staffStatus = $("#admin-staff-status");
-            const roles = ["Президент", "Вице-президент", "Министр", "Гражданин"];
-            const uniqueRoles = ["Президент", "Вице-президент", "Министр"];
-            let currentUser = null;
-            const isPresident = () => Boolean(currentUser) && currentUser.role === "Президент";
-
-            let memoryUsers = {};
-            const readUsers = () => { try { return JSON.parse(localStorage.getItem(usersKey) || "{}"); } catch { return memoryUsers; } };
-            const writeUsers = (users) => { memoryUsers = users; try { localStorage.setItem(usersKey, JSON.stringify(users)); return true; } catch { return false; } };
-            const placeholderPhoto = (first, last) => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400'><rect width='300' height='400' fill='#244c3d'/><text x='150' y='235' font-size='120' font-family='Georgia,serif' fill='#d4dfd1' text-anchor='middle'>${(first[0] + last[0]).toUpperCase().replace(/[<>&"']/g, "?")}</text></svg>`);
-            const randomChunk = (length) => Array.from(crypto.getRandomValues(new Uint8Array(length)), (n) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[n % 32]).join("");
-            const randomDigits = (length) => Array.from(crypto.getRandomValues(new Uint8Array(length)), (n) => n % 10).join("");
-
-            const hashPassword = async (password, salt) => {
-                const text = `${salt}:${password}`;
-                if (window.crypto && crypto.subtle) {
-                    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-                    return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
-                }
-                let hash = 0x811c9dc5;
-                for (const char of text) { hash ^= char.charCodeAt(0); hash = Math.imul(hash, 16777619); }
-                return (hash >>> 0).toString(16);
-            };
-
-            const resizePhoto = (file) => new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onerror = reject;
-                reader.onload = () => {
-                    const image = new Image();
-                    image.onerror = reject;
-                    image.onload = () => {
-                        const scale = Math.min(1, 480 / Math.max(image.width, image.height));
-                        const canvas = document.createElement("canvas");
-                        canvas.width = Math.round(image.width * scale);
-                        canvas.height = Math.round(image.height * scale);
-                        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
-                        resolve(canvas.toDataURL("image/jpeg", 0.82));
-                    };
-                    image.src = reader.result;
-                };
-                reader.readAsDataURL(file);
+            const form = $("#register-form"), submit = form.querySelector(".auth-submit");
+            const adminSelect = $("#admin-citizen"), adminList = $(".admin-balances"), adminTab = $("#admin-tab"), archiveTab = $("#archive-tab");
+            const staffList = $("#admin-staff"), staffStatus = $("#admin-staff-status");
+            const uniqueRoles = ["Президент", "Вице-президент", "Премьер-министр", "Помощник президента", "Министр"];
+            const assignable = ["Вице-президент", "Премьер-министр", "Помощник президента", "Министр", "Врач", "Полицейский", "Учитель", "Судья", "Военный", "Журналист", "Учёный", "Гражданин"];
+            let col = null, uid = null, people = {}, entered = false;
+            const me = () => people[uid];
+            const isPresident = () => me()?.role === "Президент";
+            const holderOf = (role) => Object.entries(people).find(([, p]) => p.role === role);
+            const rnd = (len, digits) => Array.from(crypto.getRandomValues(new Uint8Array(len)), (n) => digits ? n % 10 : "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[n % 32]).join("");
+            const placeholderPhoto = (f, l) => "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400'><rect width='300' height='400' fill='#244c3d'/><text x='150' y='235' font-size='120' font-family='Georgia,serif' fill='#d4dfd1' text-anchor='middle'>${(f[0] + l[0]).toUpperCase().replace(/[<>&"']/g, "?")}</text></svg>`);
+            const resizePhoto = (file) => new Promise((ok, no) => {
+                const r = new FileReader(); r.onerror = no;
+                r.onload = () => { const im = new Image(); im.onerror = no; im.onload = () => {
+                    const k = Math.min(1, 360 / Math.max(im.width, im.height)), c = document.createElement("canvas");
+                    c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+                    c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", 0.75));
+                }; im.src = r.result; };
+                r.readAsDataURL(file);
             });
-
             const plural = (n) => (n % 10 === 1 && n % 100 !== 11) ? "запись" : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? "записи" : "записей";
             const updateCounts = () => {
-                const total = citizenButtons.length;
-                $("#registry-count").textContent = String(total).padStart(2, "0");
-                $("#archive-tab .view-tab-count").textContent = `${String(total).padStart(2, "0")} ${plural(total)}`;
+                const t = citizenButtons.length, s = String(t).padStart(2, "0");
+                $("#registry-count").textContent = s;
+                $("#archive-tab .view-tab-count").textContent = `${s} ${plural(t)}`;
             };
-
-            const holderOf = (role) => Object.values(readUsers()).find((u) => u.role === role);
             const refreshRoleOptions = () => {
-                const select = tabs.register[1].elements.jobRole;
-                for (const option of select.options) {
-                    if (!uniqueRoles.includes(option.value)) continue;
-                    const taken = Boolean(holderOf(option.value));
-                    option.disabled = taken;
-                    option.textContent = taken ? `${option.value} · место занято` : option.value;
+                const select = form.elements.jobRole;
+                for (const o of select.options) {
+                    if (!uniqueRoles.includes(o.value)) continue;
+                    const taken = Boolean(holderOf(o.value));
+                    o.disabled = taken; o.textContent = taken ? `${o.value} · место занято` : o.value;
                 }
                 if (select.selectedOptions[0]?.disabled) select.value = "Гражданин";
             };
-            const refreshStaffOptions = () => {
-                const stored = Object.values(readUsers());
+            const staffFail = (e) => { staffStatus.textContent = `Не получилось: ${e.code === "permission_denied" || e.code === "not_granted" ? "для этого нужны права редактора страницы" : (e.message || e.code)}.`; };
+            const setRole = async (id, role) => {
+                const target = people[id];
+                if (!isPresident() || !target || target.role === "Президент" || role === "Президент") return;
+                const h = uniqueRoles.includes(role) ? holderOf(role) : null;
+                if (h && h[0] !== id) { staffStatus.textContent = `Должность «${role}» занята: ${h[1].firstName} ${h[1].lastName}. Сначала сделай его гражданином.`; refreshStaff(); return; }
+                try { await col.doc(id).update({ role }); staffStatus.textContent = `${target.firstName} ${target.lastName} теперь: ${role}.`; } catch (e) { staffFail(e); refreshStaff(); }
+            };
+            const kick = async (id, btn) => {
+                if (!isPresident() || id === uid) return;
+                if (btn.dataset.armed !== "1") { btn.dataset.armed = "1"; btn.textContent = "Точно исключить?"; setTimeout(() => { btn.dataset.armed = ""; btn.textContent = "Исключить"; }, 3000); return; }
+                try { await col.doc(id).delete(); staffStatus.textContent = "Гражданин исключён из реестра."; } catch (e) { staffFail(e); }
+            };
+            const refreshStaff = () => {
                 staffList.querySelectorAll(".admin-staff-row").forEach((row) => {
-                    const owner = stored.find((u) => u.id === row.dataset.staffId);
-                    const select = row.querySelector("select");
-                    if (!owner || select.disabled) return;
-                    for (const option of select.options) {
-                        const holder = uniqueRoles.includes(option.value) ? stored.find((u) => u.role === option.value) : null;
-                        const busyByOther = Boolean(holder) && holder.id !== owner.id;
-                        option.disabled = busyByOther;
-                        option.textContent = busyByOther ? `${option.value} · занято` : option.value;
+                    const id = row.dataset.staffId, p = people[id], sel = row.querySelector("select");
+                    if (!p || sel.disabled) return;
+                    for (const o of sel.options) {
+                        const h = uniqueRoles.includes(o.value) ? holderOf(o.value) : null;
+                        const busyByOther = Boolean(h) && h[0] !== id;
+                        o.disabled = busyByOther; o.textContent = busyByOther ? `${o.value} · занято` : o.value;
                     }
-                    select.value = owner.role || "Гражданин";
+                    sel.value = p.role || "Гражданин";
+                    row.querySelector(".admin-kick").disabled = id === uid;
                 });
             };
-
-            const setRole = (id, newRole) => {
-                if (!isPresident() || newRole === "Президент" || !roles.includes(newRole)) return;
-                const users = readUsers();
-                const target = Object.values(users).find((u) => u.id === id);
-                if (!target || target.role === "Президент") return;
-                const holder = uniqueRoles.includes(newRole) ? Object.values(users).find((u) => u.role === newRole) : null;
-                if (holder && holder.id !== id) {
-                    staffStatus.textContent = `Должность «${newRole}» уже занята: ${holder.firstName} ${holder.lastName}. Сначала сделай его гражданином.`;
-                    refreshStaffOptions();
-                    return;
+            const addStaffRow = (id, p) => {
+                const row = document.createElement("li"); row.className = "admin-staff-row"; row.dataset.staffId = id;
+                const name = document.createElement("span"); name.textContent = `${p.firstName} ${p.lastName}`;
+                const sel = document.createElement("select"); sel.className = "admin-staff-role";
+                sel.setAttribute("aria-label", `Должность: ${p.firstName} ${p.lastName}`);
+                if (p.role === "Президент") { sel.append(new Option("Президент", "Президент")); sel.disabled = true; }
+                else { assignable.forEach((r) => sel.append(new Option(r, r))); sel.addEventListener("change", () => setRole(id, sel.value)); }
+                const k = Object.assign(document.createElement("button"), { type: "button", className: "admin-kick", textContent: "Исключить" });
+                k.addEventListener("click", () => kick(id, k));
+                row.append(name, sel, k); staffList.append(row);
+            };
+            const addCitizen = (id, p) => {
+                const b = document.createElement("button"); b.className = "citizen-button"; b.type = "button"; b.setAttribute("aria-pressed", "false");
+                b.dataset.citizenId = id;
+                const n = document.createElement("span"); n.className = "citizen-button-name";
+                const r = document.createElement("span"); r.className = "citizen-button-role";
+                b.append(n, r); $(".citizen-buttons").append(b);
+                citizenButtons.push(b); citizenIds.add(id);
+                citizenBalances[id] = Number.isInteger(savedBalances[id]) ? Math.max(0, savedBalances[id]) : 600;
+                const t = savedCitizenThemes[id]; citizenThemeIds[id] = unlockedThemeIds.includes(t) ? t : "garnet";
+                const d = savedCustomDesigns[id] || {};
+                customDesignsByCitizen[id] = { color: /^#[0-9a-f]{6}$/i.test(d.color || "") ? d.color : defaultCustomColor, image: typeof d.image === "string" && d.image.startsWith("data:image/") && d.image.length <= 750000 ? d.image : "" };
+                bindCitizenButton(b);
+                const o = document.createElement("option"); o.value = id; adminSelect.append(o);
+                const li = document.createElement("li"); li.className = "admin-balance-row";
+                const strong = document.createElement("strong"), amt = document.createElement("span");
+                amt.dataset.adminBalance = id; amt.textContent = citizenBalances[id].toLocaleString("ru-RU");
+                strong.append(amt, " жт."); li.append(document.createElement("span"), strong); adminList.append(li);
+                addStaffRow(id, p);
+            };
+            const sync = () => {
+                [...citizenButtons].forEach((b) => {
+                    const id = b.dataset.citizenId;
+                    if (people[id]) return;
+                    const i = citizenButtons.indexOf(b); b.remove(); citizenButtons.splice(i, 1); citizenIds.delete(id);
+                    delete citizenBalances[id]; delete citizenThemeIds[id]; delete customDesignsByCitizen[id];
+                    [...adminSelect.options].find((o) => o.value === id)?.remove();
+                    document.querySelector(`[data-admin-balance="${id}"]`)?.closest("li")?.remove();
+                    staffList.querySelector(`[data-staff-id="${id}"]`)?.remove();
+                    if (b.getAttribute("aria-pressed") === "true" && me()) citizenButtons.find((x) => x.dataset.citizenId === uid)?.click();
+                });
+                for (const [id, p] of Object.entries(people)) {
+                    if (!citizenButtons.some((b) => b.dataset.citizenId === id)) addCitizen(id, p);
+                    const b = citizenButtons.find((x) => x.dataset.citizenId === id), role = p.role || "Гражданин";
+                    Object.assign(b.dataset, { firstName: p.firstName, surname: p.lastName, role, birthDate: p.birthDate, number: p.number, archiveCode: p.code, photo: p.photo, photoAlt: `Фото гражданина: ${p.firstName} ${p.lastName}`, closeup: "false", storyIndex: String(p.storyIndex || 0) });
+                    b.querySelector(".citizen-button-name").textContent = `${p.firstName} ${p.lastName}`;
+                    b.querySelector(".citizen-button-role").textContent = role;
+                    if (b.getAttribute("aria-pressed") === "true") roleBadge.textContent = role;
+                    const o = [...adminSelect.options].find((x) => x.value === id); if (o) o.textContent = `${p.firstName} ${p.lastName} · ${role}`;
+                    const lbl = document.querySelector(`[data-admin-balance="${id}"]`)?.closest("li")?.firstElementChild; if (lbl) lbl.textContent = `${p.firstName} ${p.lastName}`;
                 }
-                target.role = newRole;
-                writeUsers(users);
-                const button = citizenButtons.find((b) => b.dataset.citizenId === id);
-                button.dataset.role = newRole;
-                button.querySelector(".citizen-button-role").textContent = newRole;
-                if (button.getAttribute("aria-pressed") === "true") roleBadge.textContent = newRole;
-                const option = [...adminSelect.options].find((o) => o.value === id);
-                if (option) option.textContent = `${target.firstName} ${target.lastName} · ${newRole}`;
-                staffStatus.textContent = `${target.firstName} ${target.lastName} теперь: ${newRole}.`;
-                refreshStaffOptions();
-                refreshRoleOptions();
+                refreshRoleOptions(); refreshStaff(); updateCounts(); window.dispatchEvent(new CustomEvent("registry", { detail: { people, uid } }));
+                if (entered) {
+                    if (!me()) { entered = false; appShell.hidden = true; topSession.hidden = true; authScreen.hidden = false; message.textContent = "Твоя карточка удалена из реестра. Создай новую."; return; }
+                    sessionName.textContent = `${me().firstName} ${me().lastName} · ${me().role || "Гражданин"}`;
+                    adminTab.hidden = !isPresident();
+                    if (adminTab.hidden && adminTab.getAttribute("aria-selected") === "true") activateViewTab(archiveTab);
+                } else if (me()) enter();
             };
-
-            const kickCitizen = (id, button) => {
-                if (!isPresident() || id === currentUser.id) return;
-                if (button.dataset.armed !== "1") {
-                    button.dataset.armed = "1";
-                    button.textContent = "Точно исключить?";
-                    setTimeout(() => { button.dataset.armed = ""; button.textContent = "Исключить"; }, 3000);
-                    return;
-                }
-                const users = readUsers();
-                const key = Object.keys(users).find((k) => users[k].id === id);
-                if (!key) return;
-                const removed = users[key];
-                delete users[key];
-                writeUsers(users);
-                const index = citizenButtons.findIndex((b) => b.dataset.citizenId === id);
-                const wasSelected = citizenButtons[index].getAttribute("aria-pressed") === "true";
-                citizenButtons[index].remove();
-                citizenButtons.splice(index, 1);
-                citizenIds.delete(id);
-                delete citizenBalances[id];
-                delete citizenThemeIds[id];
-                delete customDesignsByCitizen[id];
-                [...adminSelect.options].find((o) => o.value === id)?.remove();
-                document.querySelector(`[data-admin-balance="${id}"]`)?.closest("li")?.remove();
-                staffList.querySelector(`[data-staff-id="${id}"]`)?.remove();
-                if (wasSelected) citizenButtons.find((b) => b.dataset.citizenId === currentUser.id)?.click();
-                saveShopState();
-                updateCounts();
-                refreshRoleOptions();
-                refreshStaffOptions();
-                staffStatus.textContent = `${removed.firstName} ${removed.lastName} исключён из реестра.`;
+            const enter = () => {
+                entered = true; message.textContent = "";
+                authScreen.hidden = true; appShell.hidden = false; topSession.hidden = false;
+                sessionName.textContent = `${me().firstName} ${me().lastName} · ${me().role || "Гражданин"}`;
+                adminTab.hidden = !isPresident(); activateViewTab(archiveTab);
+                citizenSearch.value = ""; citizenSearch.dispatchEvent(new Event("input"));
+                citizenButtons.find((b) => b.dataset.citizenId === uid)?.click(); window.scrollTo(0, 0);
             };
-
-            const addStaffRow = (user) => {
-                const row = document.createElement("li");
-                row.className = "admin-staff-row";
-                row.dataset.staffId = user.id;
-                const name = Object.assign(document.createElement("span"), { textContent: `${user.firstName} ${user.lastName}` });
-                const select = document.createElement("select");
-                select.className = "admin-staff-role";
-                select.setAttribute("aria-label", `Должность: ${user.firstName} ${user.lastName}`);
-                if (user.role === "Президент") {
-                    select.append(new Option("Президент", "Президент"));
-                    select.disabled = true;
-                } else {
-                    ["Вице-президент", "Министр", "Гражданин"].forEach((r) => select.append(new Option(r, r)));
-                    select.value = user.role || "Гражданин";
-                    select.addEventListener("change", () => setRole(user.id, select.value));
-                }
-                const kick = Object.assign(document.createElement("button"), { type: "button", className: "admin-kick", textContent: "Исключить" });
-                kick.addEventListener("click", () => kickCitizen(user.id, kick));
-                row.append(name, select, kick);
-                staffList.append(row);
-            };
-
-            const addCitizen = (user) => {
-                if (citizenButtons.some((b) => b.dataset.citizenId === user.id)) return;
-                const button = document.createElement("button");
-                button.className = "citizen-button";
-                button.type = "button";
-                button.setAttribute("aria-pressed", "false");
-                Object.assign(button.dataset, { citizenId: user.id, firstName: user.firstName, surname: user.lastName, role: user.role || "Гражданин", birthDate: user.birthDate, number: user.number, archiveCode: user.code, photo: user.photo, photoAlt: `Фото гражданина: ${user.firstName} ${user.lastName}`, closeup: "false", storyIndex: String(user.storyIndex) });
-                const name = Object.assign(document.createElement("span"), { className: "citizen-button-name", textContent: `${user.firstName} ${user.lastName}` });
-                const role = Object.assign(document.createElement("span"), { className: "citizen-button-role", textContent: user.role || "Гражданин" });
-                button.append(name, role);
-                $(".citizen-buttons").append(button);
-                citizenButtons.push(button);
-                citizenIds.add(user.id);
-
-                citizenBalances[user.id] = Number.isInteger(savedBalances[user.id]) ? Math.max(0, savedBalances[user.id]) : 600;
-                const savedTheme = savedCitizenThemes[user.id];
-                citizenThemeIds[user.id] = unlockedThemeIds.includes(savedTheme) ? savedTheme : "garnet";
-                const design = savedCustomDesigns[user.id] || {};
-                customDesignsByCitizen[user.id] = {
-                    color: typeof design.color === "string" && /^#[0-9a-f]{6}$/i.test(design.color) ? design.color : defaultCustomColor,
-                    image: typeof design.image === "string" && design.image.startsWith("data:image/") && design.image.length <= 750000 ? design.image : ""
-                };
-                bindCitizenButton(button);
-
-                const option = Object.assign(document.createElement("option"), { value: user.id, textContent: `${user.firstName} ${user.lastName} · ${user.role || "Гражданин"}` });
-                adminSelect.append(option);
-                const row = document.createElement("li");
-                row.className = "admin-balance-row";
-                const label = Object.assign(document.createElement("span"), { textContent: `${user.firstName} ${user.lastName}` });
-                const strong = document.createElement("strong");
-                const amount = document.createElement("span");
-                amount.dataset.adminBalance = user.id;
-                amount.textContent = citizenBalances[user.id].toLocaleString("ru-RU");
-                strong.append(amount, " жт.");
-                row.append(label, strong);
-                adminList.append(row);
-                addStaffRow(user);
-                updateCounts();
-            };
-
-            const setTab = (name) => {
-                for (const [key, [tab, form]] of Object.entries(tabs)) {
-                    tab.setAttribute("aria-selected", String(key === name));
-                    form.hidden = key !== name;
-                }
-                message.textContent = "";
-            };
-            tabs.login[0].addEventListener("click", () => setTab("login"));
-            tabs.register[0].addEventListener("click", () => { setTab("register"); refreshRoleOptions(); });
-
-            const enter = (user) => {
-                try { localStorage.setItem(sessionKey, user.username); } catch {}
-                authScreen.hidden = true;
-                appShell.hidden = false;
-                topSession.hidden = false;
-                currentUser = user;
-                sessionName.textContent = `${user.firstName} ${user.lastName} · ${user.role || "Гражданин"}`;
-                adminTab.hidden = !isPresident();
-                activateViewTab(archiveTab);
-                staffList.querySelectorAll(".admin-kick").forEach((kick) => { kick.disabled = kick.closest("li").dataset.staffId === user.id; });
-                citizenSearch.value = "";
-                citizenSearch.dispatchEvent(new Event("input"));
-                citizenButtons.find((b) => b.dataset.citizenId === user.id)?.click();
-                window.scrollTo(0, 0);
-            };
-
-            logoutButton.addEventListener("click", () => {
-                try { localStorage.removeItem(sessionKey); } catch {}
-                currentUser = null;
-                adminTab.hidden = true;
-                activateViewTab(archiveTab);
-                appShell.hidden = true;
-                topSession.hidden = true;
-                authScreen.hidden = false;
-                tabs.login[1].reset();
-                tabs.register[1].reset();
-                setTab("login");
-            });
-
-            const busy = (form, state) => { form.querySelector(".auth-submit").disabled = state; };
-
-            const handleLogin = async () => {
-                const form = tabs.login[1];
-                if (form.querySelector(".auth-submit").disabled) return;
-                const username = form.username.value.trim().toLowerCase();
-                const password = form.password.value;
-                if (!username || !password) { message.textContent = "Введи логин и пароль."; return; }
-                const stored = readUsers();
-                const user = Object.hasOwn(stored, username) ? stored[username] : null;
-                busy(form, true);
-                try {
-                    if (!user || await hashPassword(password, user.salt) !== user.hash) {
-                        message.textContent = "Неверный логин или пароль. Если аккаунта ещё нет, открой вкладку «Регистрация».";
-                        return;
-                    }
-                    message.textContent = "";
-                    enter(user);
-                } catch (error) {
-                    message.textContent = `Не получилось войти: ${error.message}`;
-                } finally { busy(form, false); }
-            };
-
-            const handleRegister = async () => {
-                const form = tabs.register[1];
-                if (form.querySelector(".auth-submit").disabled) return;
-                const fail = (text) => { message.textContent = text; };
-                const username = form.username.value.trim().toLowerCase();
-                const firstName = form.firstName.value.trim();
-                const lastName = form.lastName.value.trim();
-                const password = form.password.value;
+            const register = async () => {
+                if (!col || submit.disabled) return;
+                const fail = (t) => { message.textContent = t; };
+                const firstName = form.firstName.value.trim(), lastName = form.lastName.value.trim(), jobRole = form.elements.jobRole.value;
                 let birth = form.birthDate.value.trim();
-                const dotted = birth.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);
-                if (dotted) birth = `${dotted[3]}-${dotted[2].padStart(2, "0")}-${dotted[1].padStart(2, "0")}`;
-                const birthYear = Number(birth.slice(0, 4));
-
+                const dm = birth.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);
+                if (dm) birth = `${dm[3]}-${dm[2].padStart(2, "0")}-${dm[1].padStart(2, "0")}`;
+                const year = Number(birth.slice(0, 4));
                 if (firstName.length < 2) return fail("Введи имя (минимум 2 буквы).");
                 if (lastName.length < 2) return fail("Введи фамилию (минимум 2 буквы).");
-                if (!/^\d{4}-\d{2}-\d{2}$/.test(birth)) return fail("Укажи дату рождения.");
-                if (birthYear < 1900 || new Date(birth) > new Date()) return fail("Проверь дату рождения.");
-                if (username.length < 3) return fail("Логин: минимум 3 символа.");
-                if (password.length < 8) return fail("Пароль: минимум 8 символов.");
-                if (password !== form.confirmPassword.value) return fail("Пароли не совпадают.");
-                const stored = readUsers();
-                if (Object.hasOwn(stored, username)) return fail("Такой логин уже занят. Придумай другой или войди.");
-                const jobRole = form.elements.jobRole.value;
-                if (!roles.includes(jobRole)) return fail("Выбери должность.");
-                const holder = uniqueRoles.includes(jobRole) ? holderOf(jobRole) : null;
-                if (holder) { refreshRoleOptions(); return fail(`Должность «${jobRole}» уже занята: ${holder.firstName} ${holder.lastName}. Выбери другую.`); }
-
-                busy(form, true);
-                fail("Создаю карточку…");
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(birth) || year < 1900 || new Date(birth) > new Date()) return fail("Проверь дату рождения.");
+                const h = uniqueRoles.includes(jobRole) ? holderOf(jobRole) : null;
+                if (h) { refreshRoleOptions(); return fail(`Должность «${jobRole}» уже занята: ${h[1].firstName} ${h[1].lastName}.`); }
+                submit.disabled = true; fail("Создаю карточку…");
                 try {
-                    const salt = randomChunk(16);
-                    const [year, month, day] = birth.split("-");
-                    let photo;
-                    try {
-                        const file = form.portrait.files[0];
-                        photo = file ? await resizePhoto(file) : placeholderPhoto(firstName, lastName);
-                    } catch {
-                        photo = placeholderPhoto(firstName, lastName);
-                    }
-                    const user = {
-                        id: `u-${randomChunk(8).toLowerCase()}`, username, firstName, lastName, salt, role: jobRole,
-                        hash: await hashPassword(password, salt),
-                        birthDate: `${day}.${month}.${year}`,
-                        photo,
-                        number: `SKI ${randomDigits(4)} 2028`,
-                        code: `SKI-ARC-${(firstName[0] + lastName[0]).toUpperCase()}${String(birthYear).slice(2)}-${randomChunk(4)}-${randomChunk(4)}-${randomChunk(4)}-${randomChunk(4)}`,
-                        storyIndex: Math.floor(Math.random() * 5)
-                    };
-                    stored[username] = user;
-                    writeUsers(stored);
-                    addCitizen(user);
-                    refreshRoleOptions();
-                    refreshStaffOptions();
-                    message.textContent = "";
-                    enter(user);
-                } catch (error) {
-                    fail(`Не получилось создать карточку: ${error.message}`);
-                } finally { busy(form, false); }
+                    let photo; try { const f = form.portrait.files[0]; photo = f ? await resizePhoto(f) : placeholderPhoto(firstName, lastName); } catch { photo = placeholderPhoto(firstName, lastName); }
+                    const [y, m, d] = birth.split("-");
+                    const doc = { firstName, lastName, role: jobRole, birthDate: `${d}.${m}.${y}`, photo, number: `SKI ${rnd(4, true)} 2028`, code: `SKI-ARC-${(firstName[0] + lastName[0]).toUpperCase()}${String(year).slice(2)}-${rnd(4)}-${rnd(4)}-${rnd(4)}-${rnd(4)}`, storyIndex: Math.floor(Math.random() * 5), createdAt: Date.now() };
+                    await col.doc(uid).set(doc);
+                    people[uid] = doc; sync();
+                } catch (e) { fail(`Не получилось создать карточку: ${e.message || e.code}. Возможно, у тебя нет права редактировать страницу.`); }
+                finally { submit.disabled = false; }
             };
-
-            // Клики вместо отправки формы: работает и в предпросмотре, где формы заблокированы
-            [[tabs.login[1], handleLogin], [tabs.register[1], handleRegister]].forEach(([form, handler]) => {
-                const submit = form.querySelector(".auth-submit");
-                submit.type = "button";
-                submit.addEventListener("click", handler);
-                form.addEventListener("submit", (event) => event.preventDefault());
-                form.addEventListener("keydown", (event) => {
-                    if (event.key === "Enter" && event.target.tagName === "INPUT" && event.target.type !== "file") {
-                        event.preventDefault();
-                        handler();
-                    }
+            submit.type = "button"; submit.addEventListener("click", register);
+            form.addEventListener("submit", (e) => e.preventDefault());
+            form.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "file") { e.preventDefault(); register(); } });
+            logoutButton.hidden = true;
+            (async () => {
+                message.textContent = "Подключаюсь к реестру…";
+                try {
+                    const [db, user] = typeof claude === "undefined" ? [null, null] : await Promise.all([claude.use("db"), claude.use("user")]);
+                    uid = user ? await user.id() : null;
+                    if (!db || !uid) { message.textContent = "Общий реестр работает только на опубликованной странице: открой ссылку на claude.ai и войди в свой аккаунт."; submit.disabled = true; return; }
+                    col = db.collection("citizens");
+                    refreshRoleOptions(); message.textContent = "";
+                    col.onSnapshot((snap) => { people = {}; snap.docs.forEach((d) => { people[d.id] = d.data(); }); sync(); },
+                        (e) => { message.textContent = `Связь с реестром потеряна: ${e.message || e.code}`; });
+                } catch (e) { message.textContent = `Не удалось подключиться: ${e.message || e}`; }
+            })();
+        })();
+    </script>
+<script>
+        (() => {
+            const $ = (s) => document.querySelector(s);
+            let people = {}, uid = null, db = null, decrees = [], poll = null, votes = {};
+            const isPres = () => ["Президент", "Помощник президента"].includes(people[uid]?.role);
+            const status = (t) => { $("#empire-status").textContent = t; };
+            const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+            const parse = (d) => { const [dd, mm, yy] = String(d).split(".").map(Number); return { dd, mm, yy }; };
+            const word = (n, a, b, c) => (n % 10 === 1 && n % 100 !== 11) ? a : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? b : c;
+            const renderStats = () => {
+                const list = Object.values(people), box = $("#empire-stats"); box.replaceChildren();
+                const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const ages = list.map((p) => { const { dd, mm, yy } = parse(p.birthDate); let a = now.getFullYear() - yy; if (today < new Date(now.getFullYear(), mm - 1, dd)) a--; return a; });
+                let next = null;
+                list.forEach((p) => { const { dd, mm } = parse(p.birthDate); let d = new Date(now.getFullYear(), mm - 1, dd); if (d < today) d.setFullYear(d.getFullYear() + 1); const left = Math.round((d - today) / 864e5); if (!next || left < next.left) next = { left, p }; });
+                const stat = (value, label) => { const b = el("div", "stat-box"); b.append(el("strong", "", value), el("span", "", label)); box.append(b); };
+                stat(String(list.length), "граждан в реестре");
+                stat(ages.length ? String(Math.round(ages.reduce((a, b) => a + b, 0) / ages.length)) : "—", "средний возраст");
+                stat(`${list.filter((p) => ["Президент", "Вице-президент", "Премьер-министр", "Помощник президента", "Министр"].includes(p.role)).length} из 5`, "высших должностей занято");
+                stat(next ? (next.left === 0 ? "Сегодня!" : `${next.left} ${word(next.left, "день", "дня", "дней")}`) : "—", next ? `до дня рождения: ${next.p.firstName} ${next.p.lastName}` : "ближайший день рождения");
+            };
+            const renderDecrees = () => {
+                $("#decree-compose").hidden = !isPres();
+                const ul = $("#decree-list"); ul.replaceChildren();
+                if (!decrees.length) ul.append(el("li", "empty-note", "Указов пока нет."));
+                decrees.forEach((d) => {
+                    const li = el("li", "decree-item", d.text), meta = el("small"); meta.append(el("span", "", `${d.author} · ${new Date(d.createdAt).toLocaleDateString("ru-RU")}`));
+                    if (isPres()) { const x = el("button", "", "Отменить"); x.type = "button"; x.addEventListener("click", () => db.collection("decrees").doc(d.id).delete().catch((e) => status(`Не получилось: ${e.message || e.code}`))); meta.append(x); }
+                    li.append(meta); ul.append(li);
                 });
+            };
+            const renderPoll = () => {
+                const box = $("#poll-box"); box.replaceChildren(); $("#poll-admin").hidden = !isPres(); $("#poll-close").hidden = !poll;
+                if (!poll) { box.append(el("p", "empty-note", "Сейчас нет активного голосования.")); return; }
+                const mine = votes[uid]?.pollId === poll.createdAt ? votes[uid].choice : -1;
+                const counts = poll.options.map((_, i) => Object.values(votes).filter((v) => v.pollId === poll.createdAt && v.choice === i).length);
+                const total = counts.reduce((a, b) => a + b, 0);
+                box.append(el("p", "poll-q", poll.question));
+                poll.options.forEach((opt, i) => {
+                    const b = el("button", `poll-opt${mine === i ? " mine" : ""}`); b.type = "button";
+                    const bar = el("i"); bar.style.width = total ? `${Math.round(counts[i] / total * 100)}%` : "0";
+                    const row = el("span"); row.append(el("span", "", opt), el("span", "", `${counts[i]} · ${total ? Math.round(counts[i] / total * 100) : 0}%`));
+                    b.append(bar, row);
+                    b.addEventListener("click", () => db.collection("votes").doc(uid).set({ choice: i, pollId: poll.createdAt }).catch((e) => status(`Не получилось: ${e.message || e.code}`)));
+                    box.append(b);
+                });
+                box.append(el("p", "empty-note", mine < 0 ? `Проголосовало: ${total}. Выбери вариант.` : `Проголосовало: ${total}. Твой голос учтён, его можно изменить.`));
+            };
+            const renderAll = () => { renderStats(); renderDecrees(); renderPoll(); };
+            window.addEventListener("registry", (e) => { people = e.detail.people; uid = e.detail.uid; renderAll(); });
+            $("#decree-send").addEventListener("click", async () => {
+                const text = $("#decree-text").value.trim(); if (!db || !isPres() || text.length < 3) return status("Напиши текст указа (минимум 3 знака).");
+                const p = people[uid];
+                try { await db.collection("decrees").doc(`d${Date.now()}${Math.floor(Math.random() * 1000)}`).set({ text, author: `${p.firstName} ${p.lastName}`, createdAt: Date.now() }); $("#decree-text").value = ""; status("Указ издан."); } catch (e) { status(`Не получилось: ${e.message || e.code}`); }
             });
-
-            const users = readUsers();
-            const seenRoles = new Set();
-            Object.values(users).forEach((u) => {
-                if (uniqueRoles.includes(u.role) && seenRoles.has(u.role)) u.role = "Гражданин";
-                seenRoles.add(u.role);
+            $("#poll-create").addEventListener("click", async () => {
+                const q = $("#poll-q").value.trim(), options = ["#poll-a1", "#poll-a2", "#poll-a3"].map((s) => $(s).value.trim()).filter(Boolean);
+                if (!db || !isPres() || q.length < 3 || options.length < 2) return status("Нужен вопрос и минимум два варианта.");
+                try { await Promise.all(Object.keys(votes).map((id) => db.collection("votes").doc(id).delete())); await db.doc("polls/current").set({ question: q, options, createdAt: Date.now() }); ["#poll-q", "#poll-a1", "#poll-a2", "#poll-a3"].forEach((s) => { $(s).value = ""; }); status("Голосование началось."); } catch (e) { status(`Не получилось: ${e.message || e.code}`); }
             });
-            writeUsers(users);
-            Object.values(users).forEach(addCitizen);
-            refreshRoleOptions();
-            refreshStaffOptions();
-            updateCounts();
-            const remembered = (() => { try { return localStorage.getItem(sessionKey); } catch { return null; } })();
-            if (remembered && users[remembered]) enter(users[remembered]);
+            $("#poll-close").addEventListener("click", () => db && isPres() && db.doc("polls/current").delete().catch((e) => status(`Не получилось: ${e.message || e.code}`)));
+            (async () => {
+                if (typeof claude === "undefined") return;
+                db = await claude.use("db"); if (!db) return;
+                db.collection("decrees").onSnapshot((s) => { decrees = s.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => b.createdAt - a.createdAt); renderDecrees(); });
+                db.doc("polls/current").onSnapshot((s) => { poll = s.exists ? s.data() : null; renderPoll(); });
+                db.collection("votes").onSnapshot((s) => { votes = {}; s.docs.forEach((d) => { votes[d.id] = d.data(); }); renderPoll(); });
+            })();
         })();
     </script>
 </body>
